@@ -1,0 +1,7 @@
+"0","GU2 <- GU %>% "
+"0","  group_by(DOSE) %>%"
+"0","  summarise(mean_germ = mean(TAXA_DE_GERMINAÇÃO))%>% "
+"0","  dplyr::mutate(inib = ((70.90-mean_germ)/70.90)*100) %>% "
+"0","  round(digits = 2)"
+"0",""
+"0","head(GU2)"

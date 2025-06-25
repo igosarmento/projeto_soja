@@ -1,0 +1,6 @@
+"0","GU <- gsheet2tbl(""https://docs.google.com/spreadsheets/d/1zEsVt_nnmydEUBJjkyMrOLHEu6pXeM-SmwTXyEoNbmg/edit?gid=0#gid=0"")"
+"0",""
+"0","GU <- GU %>% "
+"0","  mutate(REPETICAO = as.factor(REPETICAO))"
+"0",""
+"0","head(GU)"
