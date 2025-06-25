@@ -1,21 +1,9 @@
 ---
 title: "projeto_soja"
-format:
-  html:
-    fontsize: 1.1em
-    theme: 
-      light: sandstone
-      dark: darkly
-    toc: true
-    code-copy: true
-    code-overflow: wrap
-    warning: false
+format: html
+fontsize: 1.1em
 editor: visual
 ---
-
-## 
-
-## 
 
 ## **Carregamento dos pacotes**
 
