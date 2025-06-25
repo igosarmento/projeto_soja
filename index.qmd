@@ -1,14 +1,12 @@
 ---
 title: "projeto_soja"
-format:
+format: 
   html:
     theme: 
       light: sandstone
       dark: cyborg
     css: styles.css
     toc: true
-
-editor: visual
 ---
 
 editor: visual
