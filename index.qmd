@@ -1,12 +1,11 @@
 ---
 title: "projeto_soja"
-format: 
-  html:
-    theme: 
-      light: sandstone
-      dark: cyborg
-    css: styles.css
-    toc: true
+format: html
+editor: visual
+execute: 
+  warning: false
+  error: false
+  freeze: true
 ---
 
 ## Carregame**nto dos pacotes**
