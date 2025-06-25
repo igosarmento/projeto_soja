@@ -63,10 +63,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="index_files/libs/quarto-html/anchor.min.js"></script>
 <link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="index_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
 
 <script src="index_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
@@ -93,12 +95,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section"></a></li>
+  <li><a href="#carregamento-dos-pacotes" id="toc-carregamento-dos-pacotes" class="nav-link" data-scroll-target="#carregamento-dos-pacotes"><strong>Carregamento dos pacotes</strong></a></li>
+  <li><a href="#localização-dos-experimentos" id="toc-localização-dos-experimentos" class="nav-link" data-scroll-target="#localização-dos-experimentos"><strong>Localização dos Experimentos</strong></a></li>
+  <li><a href="#importação-os-dados---germinação-de-uredósporos-gu" id="toc-importação-os-dados---germinação-de-uredósporos-gu" class="nav-link" data-scroll-target="#importação-os-dados---germinação-de-uredósporos-gu"><strong>Importação os dados - Germinação de Uredósporos (GU)</strong></a></li>
+  <li><a href="#cálculo-da-germinação-média" id="toc-cálculo-da-germinação-média" class="nav-link" data-scroll-target="#cálculo-da-germinação-média"><strong>Cálculo da Germinação Média</strong></a></li>
+  <li><a href="#modelagem-da-ec50-modelo-não-linear" id="toc-modelagem-da-ec50-modelo-não-linear" class="nav-link" data-scroll-target="#modelagem-da-ec50-modelo-não-linear"><strong>Modelagem da EC<sub>50</sub> (modelo não-linear)</strong></a></li>
+  <li><a href="#cálculo-da-ec50" id="toc-cálculo-da-ec50" class="nav-link" data-scroll-target="#cálculo-da-ec50"><strong>Cálculo da EC<sub>50</sub></strong></a></li>
+  <li><a href="#tabela-de-resultados" id="toc-tabela-de-resultados" class="nav-link" data-scroll-target="#tabela-de-resultados"><strong>Tabela de Resultados</strong></a></li>
+  <li><a href="#gráfico-de-dose-germinação" id="toc-gráfico-de-dose-germinação" class="nav-link" data-scroll-target="#gráfico-de-dose-germinação"><strong>Gráfico de Dose ✕ Germinação</strong></a></li>
+  <li><a href="#parâmetros-epidemiológicos" id="toc-parâmetros-epidemiológicos" class="nav-link" data-scroll-target="#parâmetros-epidemiológicos"><strong>Parâmetros Epidemiológicos</strong></a>
+  <ul class="collapse">
+  <li><a href="#carregamento-dos-pacotes-1" id="toc-carregamento-dos-pacotes-1" class="nav-link" data-scroll-target="#carregamento-dos-pacotes-1"><strong>Carregamento dos pacotes</strong></a></li>
+  </ul></li>
+  <li><a href="#área-abaixo-da-curva-de-progresso-da-doença" id="toc-área-abaixo-da-curva-de-progresso-da-doença" class="nav-link" data-scroll-target="#área-abaixo-da-curva-de-progresso-da-doença"><strong>Área Abaixo da Curva de Progresso da Doença</strong></a>
+  <ul class="collapse">
+  <li><a href="#importação-dos-dados---progresso-temporal-da-doença-ptd" id="toc-importação-dos-dados---progresso-temporal-da-doença-ptd" class="nav-link" data-scroll-target="#importação-dos-dados---progresso-temporal-da-doença-ptd"><strong>Importação dos dados - Progresso Temporal da Doença (PTD)</strong></a></li>
+  <li><a href="#preparando-os-dados-para-análise" id="toc-preparando-os-dados-para-análise" class="nav-link" data-scroll-target="#preparando-os-dados-para-análise"><strong>Preparando os dados para análise</strong></a></li>
+  <li><a href="#cálculo-da-área-abaixo-da-curva-de-progresso-da-doença" id="toc-cálculo-da-área-abaixo-da-curva-de-progresso-da-doença" class="nav-link" data-scroll-target="#cálculo-da-área-abaixo-da-curva-de-progresso-da-doença"><strong>Cálculo da área abaixo da curva de progresso da doença</strong></a></li>
+  <li><a href="#visualização-gráfica" id="toc-visualização-gráfica" class="nav-link" data-scroll-target="#visualização-gráfica"><strong>Visualização Gráfica</strong></a></li>
+  <li><a href="#determinação-do-modelo" id="toc-determinação-do-modelo" class="nav-link" data-scroll-target="#determinação-do-modelo"><strong>Determinação do modelo</strong></a></li>
+  <li><a href="#cálculo-da-aacpd-por-experimento" id="toc-cálculo-da-aacpd-por-experimento" class="nav-link" data-scroll-target="#cálculo-da-aacpd-por-experimento"><strong>Cálculo da AACPD por experimento</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -120,6 +152,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>editor: visual</p>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+</section>
 <section id="carregamento-dos-pacotes" class="level2">
 <h2 class="anchored" data-anchor-id="carregamento-dos-pacotes"><strong>Carregamento dos pacotes</strong></h2>
 <div class="cell">
@@ -183,8 +219,8 @@ O seguinte objeto é mascarado por 'package:dplyr':
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="at">lng =</span> <span class="sc">-</span><span class="fl">42.8497</span> , <span class="at">lat =</span> <span class="sc">-</span><span class="fl">20.7453</span>, <span class="at">zoom =</span> <span class="dv">16</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-6c53f859dbf141e7a918" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-6c53f859dbf141e7a918">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]}],"setView":[[-20.7453,-42.8497],16,[]]},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-ddb42a5fc2e06da8b427" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ddb42a5fc2e06da8b427">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]}],"setView":[[-20.7453,-42.8497],16,[]]},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -975,6 +1011,150 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
   const icon = "";
   const anchorJS = new window.AnchorJS();
   anchorJS.options = {

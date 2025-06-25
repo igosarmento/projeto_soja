@@ -1,9 +1,19 @@
 ---
 title: "projeto_soja"
-format: html
-fontsize: 1.1em
+format:
+  html:
+    theme: 
+      light: sandstone
+      dark: cyborg
+    css: styles.css
+    toc: true
+
 editor: visual
 ---
+
+editor: visual
+
+## 
 
 ## **Carregamento dos pacotes**
 
