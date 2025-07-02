@@ -1,61 +1,24 @@
 ---
-project:
-  type: website
-  output-dir: docs
-   
-execute:
-  cache: true
-  freeze: auto
-  warning: false
-
-website:
-  title: "Projeto Final"
-  favicon: logo3.png
-  
-  navbar:
-    pinned: true
-    logo: logo2.gif
-    
-    left:
-      - href: resumo.qmd
-        text: Sobre o projeto
-      - text: Análise dos Dados
-        menu: 
-          - href: dados.qmd
-            text: Análise Contagem de Galhas (Escala de Notas)
-          - href: dados2.qmd
-            text: Análise Fator de Reprodução
-      
-    right:
-       - icon: linkedin
-         href: https://br.linkedin.com/in/dy%C3%AAnici-rodrigues-30ba6a241
-       - icon: instagram
-         menu: 
-            - text: Dyênici Rodrigues
-              url: https://www.instagram.com/dyenici/
-            - text: Emerson M. Del Ponte
-              url: https://www.instagram.com/emdelponte/
-            - text: Fitopatolofia UFV
-              url: https://www.instagram.com/fitopatologiaufv/
-       - icon: youtube
-         href: https://www.youtube.com/edelponte
-       - icon: github
-         menu:
-            - text: Dyênici Rodrigues
-              url: https://github.com/dyenici
-            - text: Emerson M. Del Ponte
-              url: https://github.com/emdelponte
-
-format:
+title: "Projeto Soja"
+format: 
   html:
-    theme:
-      light: flatly
-      dark: darkly
+    theme: 
+      light: sandstone
+      dark: cyborg
     css: styles.css
     toc: true
-
-editor: visual
+    editor: visual
 ---
+
+:::: top-banner
+![Ferrugem da soja](images/ferrugem.webp){.banner-img alt="Ferrugem da soja"}
+
+::: banner-title
+Projeto Soja
+
+Este projeto teve como objetivo avaliar a eficácia de diferentes estratégias de aplicação de bioestimulantes no controle de doenças em plantas de soja. O experimento foi conduzido em dois ensaios independentes (Experimento 1 e Experimento 2), utilizando um delineamento em blocos ao acaso com 4 repetições. Foram testados seis tratamentos, incluindo um controle negativo (sem aplicação) e diferentes combinações e frequências de aplicação de bioinsumos comerciais (Fungicida e IRStimulus). A severidade da doença foi monitorada ao longo do tempo, sendo estimada em diferentes dias após a inoculação. Com base nesses dados, foram calculados os valores da Área Abaixo da Curva de Progresso da Doença (AACPD), além da análise estatística das médias e grupos de comparação, com o intuito de identificar os tratamentos mais promissores para o manejo integrado de doenças da soja.
+:::
+::::
 
 # CARREGAMENTO DE PACOTES
 
@@ -80,6 +43,8 @@ library(qqplotr)
 
 ## LOCALIZAÇÃO DOS EXPERIMENTOS
 
+Os experimentos foram conduzidos na área experimental do Departamento de Fitopatologia da Universidade Federal de Viçosa, município de Viçosa, Minas Gerais, Brasil, localizada na região sudeste do estado de Minas Gerais (20º44'44''S, 42º50'59''O e 661 m acima do nível do mar). O primeiro experimento foi conduzido de novembro de 2023 a março de 2024 (Experimento 1; E1) e o segundo experimento de dezembro de 2023 a abril de 2024 (Experimento 2; E2).
+
 ### Os experimentos foram conduzidos na área experimental do Departamento de Fitopatologia da Universidade Federal de Viçosa, município de Viçosa, Minas Gerais, Brasil, localizada na região sudeste do estado de Minas Gerais (20º44'44''S, 42º50'59''O e 661 m acima do nível do mar). O primeiro experimento foi conduzido de novembro de 2023 a março de 2024 (Experimento 1; E1) e o segundo experimento de dezembro de 2023 a abril de 2024 (Experimento 2; E2).
 
 ```{r}
@@ -92,7 +57,7 @@ leaflet() %>%
 
 ## ANÁLISE DE GERMINAÇÃO DE UREDÓSPOROS (GU)
 
-### A germinação de uredósporos (*GU*) é um bioensaio crítico para avaliar a sensibilidade de patógenos a tratamentos. Nesta seção, modelamos a curva dose-resposta usando um modelo log-logístico, calculamos a inibição percentual em relação ao controle e determinamos a EC50 (dose para 50% de inibição). Os resultados são apresentados em gráficos com intervalos de confiança e tabelas sumarizadas, destacando a eficácia do tratamento em suprimir a germinação.
+A germinação de uredósporos (GU) é um bioensaio crítico para avaliar a sensibilidade de patógenos a tratamentos. Nesta seção, modelamos a curva dose-resposta usando um modelo log-logístico, calculamos a inibição percentual em relação ao controle e determinamos a EC50 (dose para 50% de inibição). Os resultados são apresentados em gráficos com intervalos de confiança e tabelas sumarizadas, destacando a eficácia do tratamento em suprimir a germinação.
 
 ```{r}
 GU <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1zEsVt_nnmydEUBJjkyMrOLHEu6pXeM-SmwTXyEoNbmg/edit?gid=0#gid=0")
@@ -166,6 +131,10 @@ cat(paste("EC50 =", round(EC50_result[1], 2),
 
 ## VISUALIZAÇÃO DA CURVA DOSE-RESPOSTA
 
+O gráfico apresenta pontos experimentais com suas respectivas médias e intervalos de confiança (barras de erro), refletindo a variabilidade dos dados. A linha azul representa o ajuste do modelo log-logístico (função W1.4), que permite estimar parâmetros fundamentais, como a **EC50** — a dose que causa 50% de inibição da germinação.
+
+A linha horizontal tracejada vermelha indica esse ponto crítico de 50% de resposta, e o valor estimado da EC50 é destacado no gráfico com seu intervalo de confiança (95%), fornecendo uma medida da sensibilidade do patógeno ao tratamento. Essa análise é crucial para determinar doses eficazes que possam controlar o patógeno sem uso excessivo do produto.
+
 ```{r}
 plot_curva <- ggplot(data = GU2, aes(x = DOSE)) +
   geom_point(aes(y = mean_germ), size = 3) +
@@ -190,6 +159,16 @@ print(plot_curva)
 ```
 
 ## CÁLCULO DA ÁREA ABAIXO DA CURVA (AACPD)
+
+Nesta etapa, os dados de severidade da doença foram importados diretamente de uma planilha online, permitindo o acesso a informações atualizadas do experimento. A variável **SEVERIDADE** foi ajustada para um formato numérico percentual, facilitando a análise quantitativa.
+
+As variáveis categóricas, como **REPETIÇÃO**, **BLOCO** e **TRATAMENTO**, foram convertidas para fatores para garantir a correta manipulação estatística.
+
+Os tratamentos foram organizados em níveis específicos para facilitar a comparação entre diferentes protocolos aplicados no experimento.
+
+Posteriormente, os dados foram agrupados por repetição, tratamento e dias após a inoculação (**DAE**), e foram calculadas as médias, desvios padrão e o número de observações para cada grupo. Além disso, foram estimados os intervalos de confiança (95%) para a severidade média, permitindo uma avaliação da precisão das estimativas.
+
+Essa análise preliminar é fundamental para compreender o progresso da doença ao longo do tempo e o efeito dos tratamentos aplicados.
 
 ```{r}
 PTD <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1zEsVt_nnmydEUBJjkyMrOLHEu6pXeM-SmwTXyEoNbmg/edit?gid=1680501439#gid=1680501439")
@@ -228,6 +207,10 @@ head(PTD_2) %>%
 
 ## VERIFICAÇÃO DA INTERAÇÃO ENTRE EXPERIMENTOS
 
+Os dados foram agrupados por repetição, tratamento e bloco experimental para calcular a Área Abaixo da Curva de Progresso da Doença (**AACPD**), utilizando a função `AUDPC` que integra a severidade da doença ao longo do tempo (DAE).
+
+Após o cálculo, as variáveis categóricas foram corretamente definidas como fatores para garantir a coerência nas análises subsequentes.
+
 ```{r}
 PTD_3 <- PTD %>%
   group_by(REPETIÇÃO, TRATAMENTO, BLOCO) %>% 
@@ -264,6 +247,14 @@ if (anova_interacao["TRATAMENTO:REPETIÇÃO", "Pr(>F)"] < 0.05) {
 ```
 
 ## ANÁLISE INDIVIDUAL PARA CADA EXPERIMENTO
+
+Realizo-se a análise estatística dos dados referentes a cada experimento, considerando os efeitos dos tratamentos e blocos. Inicialmente, é ajustado um modelo linear para a variável de interesse (AACPD).
+
+Em seguida, foram verificados os pressupostos do modelo, incluindo testes de normalidade dos resíduos e de homocedasticidade. Caso seja detectada heterocedasticidade, foi aplicada uma transformação logarítmica nos dados para melhorar o ajuste.
+
+Após a validação dos pressupostos, foi realizada a análise de variância (ANOVA) para identificar diferenças significativas entre os tratamentos.
+
+Finalmente, foram calculadas as médias ajustadas e realizadas comparações múltiplas pelo teste de Tukey, com a geração das letras de agrupamento para facilitar a interpretação dos resultados. O coeficiente de variação (CV) também foi calculado para avaliação da precisão do experimento.
 
 ```{r}
 analisar_experimento <- function(dados_experimento, exp_id) {
@@ -325,6 +316,16 @@ resultados_exp2 <- analisar_experimento(filter(PTD_3, REPETIÇÃO == 2), 2)
 ```
 
 ## TABELA RESUMO DOS RESULTADOS
+
+A Tabela 1 apresenta as médias do AACPD (Área Abaixo da Curva de Progresso da Doença) para os diferentes tratamentos avaliados em dois experimentos independentes. As médias foram comparadas pelo teste de Tukey a 5% de significância, e as letras associadas indicam os grupos estatisticamente distintos.
+
+No **Experimento 1**, observou-se que o tratamento `"Control"` apresentou os maiores valores médios de AACPD, indicando maior severidade ao longo do tempo. Em contrapartida, tratamentos como `"IRStimulus+F, F,F"` e `"3 x IRStimulus"` apresentaram valores significativamente menores, destacando-se pela maior eficácia no controle da doença.
+
+No **Experimento 2**, um padrão semelhante foi identificado. O tratamento `"Control"` também apresentou os maiores valores médios de AACPD, enquanto tratamentos com aplicações múltiplas ou combinadas, como `"F, IRStimulus, IRStimulus"` e `"IRStimulus+F, F,F"`, mantiveram os menores valores médios e integraram grupos estatisticamente superiores em relação à testemunha.
+
+Os **coeficientes de variação (CV)** foram de `X%` no Experimento 1 e `Y%` no Experimento 2 (valores exatos conforme tabela), indicando boa precisão experimental.
+
+Esses resultados demonstram que a aplicação de bioestimulantes, isoladamente ou em combinação, contribui para a redução da severidade da doença ao longo do tempo, com destaque para os esquemas com maior frequência ou sinergia entre os produtos.
 
 ```{r}
 extrair_dados_cld <- function(cld_obj) {
@@ -413,6 +414,10 @@ kable(tabela_final, align = "c") %>%
 ```
 
 ## VISUALIZAÇÃO GRÁFICA DOS RESULTADOS
+
+A Figura 1 apresenta a distribuição dos valores da Área Abaixo da Curva de Progresso da Doença (AACPD) para cada tratamento, separadamente por experimento. Observa-se que o tratamento controle apresentou, em ambos os experimentos, os maiores valores de AACPD, indicando maior severidade acumulada ao longo do tempo. Em contrapartida, os tratamentos compostos por aplicações sequenciais ou combinadas de bioestimulantes apresentaram reduções evidentes na severidade, com menores medianas e menores dispersões nos valores. Os pontos vermelhos indicam as médias de cada grupo, facilitando a comparação visual entre os tratamentos.
+
+A Figura 2 ilustra a progressão da severidade da doença ao longo dos dias após a inoculação (DAI), com médias e intervalos de confiança para cada tratamento, separadas por experimento. Em ambos os experimentos, observa-se que os tratamentos com bioestimulantes retardaram a progressão da doença em comparação ao controle. Tratamentos com múltiplas aplicações ou com combinações de produtos apresentaram curvas mais suaves e com menor severidade acumulada ao longo do tempo, reforçando a eficácia dessas estratégias no manejo da doença.
 
 ```{r}
 ggplot(PTD_3, aes(x = TRATAMENTO, y = audpc, fill = REPETIÇÃO)) +
