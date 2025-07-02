@@ -11,7 +11,7 @@ format:
 ---
 
 :::: top-banner
-![Ferrugem da soja](images/ferrugem.webp){.banner-img alt="Ferrugem da soja"}
+![Ferrugem da soja](images/ferrugem.webp){.banner-img}
 
 ::: banner-title
 Projeto Soja
