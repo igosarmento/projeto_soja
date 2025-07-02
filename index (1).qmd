@@ -33,6 +33,8 @@ library(qqplotr)
 
 ## LOCALIZAÇÃO DOS EXPERIMENTOS
 
+### Os experimentos foram conduzidos na área experimental do Departamento de Fitopatologia da Universidade Federal de Viçosa, município de Viçosa, Minas Gerais, Brasil, localizada na região sudeste do estado de Minas Gerais (20º44'44''S, 42º50'59''O e 661 m acima do nível do mar). O primeiro experimento foi conduzido de novembro de 2023 a março de 2024 (Experimento 1; E1) e o segundo experimento de dezembro de 2023 a abril de 2024 (Experimento 2; E2).
+
 ```{r}
 leaflet() %>%
   addTiles() %>% 
@@ -42,6 +44,8 @@ leaflet() %>%
 ```
 
 ## ANÁLISE DE GERMINAÇÃO DE UREDÓSPOROS (GU)
+
+### A germinação de uredósporos (*GU*) é um bioensaio crítico para avaliar a sensibilidade de patógenos a tratamentos. Nesta seção, modelamos a curva dose-resposta usando um modelo log-logístico, calculamos a inibição percentual em relação ao controle e determinamos a EC50 (dose para 50% de inibição). Os resultados são apresentados em gráficos com intervalos de confiança e tabelas sumarizadas, destacando a eficácia do tratamento em suprimir a germinação.
 
 ```{r}
 GU <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1zEsVt_nnmydEUBJjkyMrOLHEu6pXeM-SmwTXyEoNbmg/edit?gid=0#gid=0")
@@ -81,6 +85,17 @@ head(GU2) %>%
 ```
 
 ## MODELAGEM DA CURVA DOSE-RESPOSTA
+
+A modelagem da curva dose-resposta é essencial para quantificar a relação entre a concentração do tratamento e seu efeito na germinação de uredósporos. Nesta análise:
+
+Utilizamos um modelo não linear (*drm* com função *W1.4*) para estimar parâmetros como:
+
+-   **E\<sub\>max\</sub\>**: Máxima inibição observada.
+
+-   **EC50**: Dose para 50% do efeito (com IC 95%).
+
+-   **Inclinação da curva**: Sensibilidade do patógeno a variações de dose.\
+    A validação do modelo incluiu análise de resíduos e teste de normalidade, garantindo robustez nas estimativas.
 
 ```{r}
 EC <- drm(
@@ -184,7 +199,7 @@ head(PTD_3) %>%
   kable_styling(full_width = FALSE)
 ```
 
-## VERIFICAÇÃO DA INTERAÇÃO ENTRE EXPERIMENTOS\]
+## Interação
 
 ```{r}
 modelo_interacao <- lm(audpc ~ TRATAMENTO * REPETIÇÃO + BLOCO,

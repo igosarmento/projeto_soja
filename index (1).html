@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Projeto soja</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="index (1)_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index (1)_files/libs/quarto-html/quarto.js"></script>
+<script src="index (1)_files/libs/quarto-html/popper.min.js"></script>
+<script src="index (1)_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index (1)_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index (1)_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index (1)_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="index (1)_files/libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="index (1)_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index (1)_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index (1)_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="index (1)_files/libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="index (1)_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="index (1)_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="index (1)_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="index (1)_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+
+<script src="index (1)_files/libs/leaflet-1.3.1/leaflet.js"></script>
+
+<link href="index (1)_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+
+<script src="index (1)_files/libs/proj4-2.6.2/proj4.min.js"></script>
+
+<script src="index (1)_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+
+<link href="index (1)_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+
+<script src="index (1)_files/libs/leaflet-binding-2.2.2/leaflet.js"></script>
+
+<script src="index (1)_files/libs/kePrint-0.0.1/kePrint.js"></script>
+
+<link href="index (1)_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#carregamento-de-pacotes" id="toc-carregamento-de-pacotes" class="nav-link active" data-scroll-target="#carregamento-de-pacotes">CARREGAMENTO DE PACOTES</a>
+  <ul class="collapse">
+  <li><a href="#localização-dos-experimentos" id="toc-localização-dos-experimentos" class="nav-link" data-scroll-target="#localização-dos-experimentos">LOCALIZAÇÃO DOS EXPERIMENTOS</a>
+  <ul class="collapse">
+  <li><a href="#os-experimentos-foram-conduzidos-na-área-experimental-do-departamento-de-fitopatologia-da-universidade-federal-de-viçosa-município-de-viçosa-minas-gerais-brasil-localizada-na-região-sudeste-do-estado-de-minas-gerais-20º4444s-42º5059o-e-661-m-acima-do-nível-do-mar.-o-primeiro-experimento-foi-conduzido-de-novembro-de-2023-a-março-de-2024-experimento-1-e1-e-o-segundo-experimento-de-dezembro-de-2023-a-abril-de-2024-experimento-2-e2." id="toc-os-experimentos-foram-conduzidos-na-área-experimental-do-departamento-de-fitopatologia-da-universidade-federal-de-viçosa-município-de-viçosa-minas-gerais-brasil-localizada-na-região-sudeste-do-estado-de-minas-gerais-20º4444s-42º5059o-e-661-m-acima-do-nível-do-mar.-o-primeiro-experimento-foi-conduzido-de-novembro-de-2023-a-março-de-2024-experimento-1-e1-e-o-segundo-experimento-de-dezembro-de-2023-a-abril-de-2024-experimento-2-e2." class="nav-link" data-scroll-target="#os-experimentos-foram-conduzidos-na-área-experimental-do-departamento-de-fitopatologia-da-universidade-federal-de-viçosa-município-de-viçosa-minas-gerais-brasil-localizada-na-região-sudeste-do-estado-de-minas-gerais-20º4444s-42º5059o-e-661-m-acima-do-nível-do-mar.-o-primeiro-experimento-foi-conduzido-de-novembro-de-2023-a-março-de-2024-experimento-1-e1-e-o-segundo-experimento-de-dezembro-de-2023-a-abril-de-2024-experimento-2-e2.">Os experimentos foram conduzidos na área experimental do Departamento de Fitopatologia da Universidade Federal de Viçosa, município de Viçosa, Minas Gerais, Brasil, localizada na região sudeste do estado de Minas Gerais (20º44’44’‘S, 42º50’59’’O e 661 m acima do nível do mar). O primeiro experimento foi conduzido de novembro de 2023 a março de 2024 (Experimento 1; E1) e o segundo experimento de dezembro de 2023 a abril de 2024 (Experimento 2; E2).</a></li>
+  </ul></li>
+  <li><a href="#análise-de-germinação-de-uredósporos-gu" id="toc-análise-de-germinação-de-uredósporos-gu" class="nav-link" data-scroll-target="#análise-de-germinação-de-uredósporos-gu">ANÁLISE DE GERMINAÇÃO DE UREDÓSPOROS (GU)</a>
+  <ul class="collapse">
+  <li><a href="#a-germinação-de-uredósporos-gu-é-um-bioensaio-crítico-para-avaliar-a-sensibilidade-de-patógenos-a-tratamentos.-nesta-seção-modelamos-a-curva-dose-resposta-usando-um-modelo-log-logístico-calculamos-a-inibição-percentual-em-relação-ao-controle-e-determinamos-a-ec50-dose-para-50-de-inibição.-os-resultados-são-apresentados-em-gráficos-com-intervalos-de-confiança-e-tabelas-sumarizadas-destacando-a-eficácia-do-tratamento-em-suprimir-a-germinação." id="toc-a-germinação-de-uredósporos-gu-é-um-bioensaio-crítico-para-avaliar-a-sensibilidade-de-patógenos-a-tratamentos.-nesta-seção-modelamos-a-curva-dose-resposta-usando-um-modelo-log-logístico-calculamos-a-inibição-percentual-em-relação-ao-controle-e-determinamos-a-ec50-dose-para-50-de-inibição.-os-resultados-são-apresentados-em-gráficos-com-intervalos-de-confiança-e-tabelas-sumarizadas-destacando-a-eficácia-do-tratamento-em-suprimir-a-germinação." class="nav-link" data-scroll-target="#a-germinação-de-uredósporos-gu-é-um-bioensaio-crítico-para-avaliar-a-sensibilidade-de-patógenos-a-tratamentos.-nesta-seção-modelamos-a-curva-dose-resposta-usando-um-modelo-log-logístico-calculamos-a-inibição-percentual-em-relação-ao-controle-e-determinamos-a-ec50-dose-para-50-de-inibição.-os-resultados-são-apresentados-em-gráficos-com-intervalos-de-confiança-e-tabelas-sumarizadas-destacando-a-eficácia-do-tratamento-em-suprimir-a-germinação.">A germinação de uredósporos (<em>GU</em>) é um bioensaio crítico para avaliar a sensibilidade de patógenos a tratamentos. Nesta seção, modelamos a curva dose-resposta usando um modelo log-logístico, calculamos a inibição percentual em relação ao controle e determinamos a EC50 (dose para 50% de inibição). Os resultados são apresentados em gráficos com intervalos de confiança e tabelas sumarizadas, destacando a eficácia do tratamento em suprimir a germinação.</a></li>
+  </ul></li>
+  <li><a href="#modelagem-da-curva-dose-resposta" id="toc-modelagem-da-curva-dose-resposta" class="nav-link" data-scroll-target="#modelagem-da-curva-dose-resposta">MODELAGEM DA CURVA DOSE-RESPOSTA</a></li>
+  <li><a href="#visualização-da-curva-dose-resposta" id="toc-visualização-da-curva-dose-resposta" class="nav-link" data-scroll-target="#visualização-da-curva-dose-resposta">VISUALIZAÇÃO DA CURVA DOSE-RESPOSTA</a></li>
+  <li><a href="#cálculo-da-área-abaixo-da-curva-aacpd" id="toc-cálculo-da-área-abaixo-da-curva-aacpd" class="nav-link" data-scroll-target="#cálculo-da-área-abaixo-da-curva-aacpd">CÁLCULO DA ÁREA ABAIXO DA CURVA (AACPD)</a></li>
+  <li><a href="#verificação-da-interação-entre-experimentos" id="toc-verificação-da-interação-entre-experimentos" class="nav-link" data-scroll-target="#verificação-da-interação-entre-experimentos">VERIFICAÇÃO DA INTERAÇÃO ENTRE EXPERIMENTOS</a></li>
+  <li><a href="#interação" id="toc-interação" class="nav-link" data-scroll-target="#interação">Interação</a></li>
+  <li><a href="#análise-individual-para-cada-experimento" id="toc-análise-individual-para-cada-experimento" class="nav-link" data-scroll-target="#análise-individual-para-cada-experimento">ANÁLISE INDIVIDUAL PARA CADA EXPERIMENTO</a></li>
+  <li><a href="#tabela-resumo-dos-resultados" id="toc-tabela-resumo-dos-resultados" class="nav-link" data-scroll-target="#tabela-resumo-dos-resultados">TABELA RESUMO DOS RESULTADOS</a></li>
+  <li><a href="#visualização-gráfica-dos-resultados" id="toc-visualização-gráfica-dos-resultados" class="nav-link" data-scroll-target="#visualização-gráfica-dos-resultados">VISUALIZAÇÃO GRÁFICA DOS RESULTADOS</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Projeto soja</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="carregamento-de-pacotes" class="level1">
+<h1>CARREGAMENTO DE PACOTES</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(drc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: MASS
+
+Anexando pacote: 'MASS'
+
+O seguinte objeto é mascarado por 'package:dplyr':
+
+    select
+
+
+'drc' has been loaded.
+
+Please cite R and 'drc' if used for a publication,
+for references type 'citation()' and 'citation('drc')'.
+
+
+Anexando pacote: 'drc'
+
+Os seguintes objetos são mascarados por 'package:stats':
+
+    gaussian, getInitial</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gsheet)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Anexando pacote: 'kableExtra'
+
+O seguinte objeto é mascarado por 'package:dplyr':
+
+    group_rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DT)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Anexando pacote: 'patchwork'
+
+O seguinte objeto é mascarado por 'package:MASS':
+
+    area</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(performance)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome to emmeans.
+Caution: You lose important information if you filter this package's results.
+See '? untidy'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DHARMa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>This is DHARMa 0.4.7. For overview type '?DHARMa'. For recent changes, type news(package = 'DHARMa')</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: mvtnorm
+Carregando pacotes exigidos: survival
+Carregando pacotes exigidos: TH.data
+
+Anexando pacote: 'TH.data'
+
+O seguinte objeto é mascarado por 'package:MASS':
+
+    geyser</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epifitter)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: Matrix
+
+Anexando pacote: 'Matrix'
+
+Os seguintes objetos são mascarados por 'package:tidyr':
+
+    expand, pack, unpack</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(agricolae)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(qqplotr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Anexando pacote: 'qqplotr'
+
+Os seguintes objetos são mascarados por 'package:ggplot2':
+
+    stat_qq_line, StatQqLine</code></pre>
+</div>
+</div>
+<section id="localização-dos-experimentos" class="level2">
+<h2 class="anchored" data-anchor-id="localização-dos-experimentos">LOCALIZAÇÃO DOS EXPERIMENTOS</h2>
+<section id="os-experimentos-foram-conduzidos-na-área-experimental-do-departamento-de-fitopatologia-da-universidade-federal-de-viçosa-município-de-viçosa-minas-gerais-brasil-localizada-na-região-sudeste-do-estado-de-minas-gerais-20º4444s-42º5059o-e-661-m-acima-do-nível-do-mar.-o-primeiro-experimento-foi-conduzido-de-novembro-de-2023-a-março-de-2024-experimento-1-e1-e-o-segundo-experimento-de-dezembro-de-2023-a-abril-de-2024-experimento-2-e2." class="level3">
+<h3 class="anchored" data-anchor-id="os-experimentos-foram-conduzidos-na-área-experimental-do-departamento-de-fitopatologia-da-universidade-federal-de-viçosa-município-de-viçosa-minas-gerais-brasil-localizada-na-região-sudeste-do-estado-de-minas-gerais-20º4444s-42º5059o-e-661-m-acima-do-nível-do-mar.-o-primeiro-experimento-foi-conduzido-de-novembro-de-2023-a-março-de-2024-experimento-1-e1-e-o-segundo-experimento-de-dezembro-de-2023-a-abril-de-2024-experimento-2-e2.">Os experimentos foram conduzidos na área experimental do Departamento de Fitopatologia da Universidade Federal de Viçosa, município de Viçosa, Minas Gerais, Brasil, localizada na região sudeste do estado de Minas Gerais (20º44’44’‘S, 42º50’59’’O e 661 m acima do nível do mar). O primeiro experimento foi conduzido de novembro de 2023 a março de 2024 (Experimento 1; E1) e o segundo experimento de dezembro de 2023 a abril de 2024 (Experimento 2; E2).</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leaflet</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="at">lng =</span> <span class="sc">-</span><span class="fl">42.8497</span>, <span class="at">lat =</span> <span class="sc">-</span><span class="fl">20.7453</span>, <span class="at">zoom =</span> <span class="dv">16</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMarkers</span>(<span class="at">lng =</span> <span class="sc">-</span><span class="fl">42.8497</span>, <span class="at">lat =</span> <span class="sc">-</span><span class="fl">20.7453</span>, </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">popup =</span> <span class="st">"Localização do experimento"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-1702137521be8b5bd40a" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-1702137521be8b5bd40a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addMarkers","args":[-20.7453,-42.8497,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},"Localização do experimento",null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"setView":[[-20.7453,-42.8497],16,[]],"limits":{"lat":[-20.7453,-20.7453],"lng":[-42.8497,-42.8497]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="análise-de-germinação-de-uredósporos-gu" class="level2">
+<h2 class="anchored" data-anchor-id="análise-de-germinação-de-uredósporos-gu">ANÁLISE DE GERMINAÇÃO DE UREDÓSPOROS (GU)</h2>
+<section id="a-germinação-de-uredósporos-gu-é-um-bioensaio-crítico-para-avaliar-a-sensibilidade-de-patógenos-a-tratamentos.-nesta-seção-modelamos-a-curva-dose-resposta-usando-um-modelo-log-logístico-calculamos-a-inibição-percentual-em-relação-ao-controle-e-determinamos-a-ec50-dose-para-50-de-inibição.-os-resultados-são-apresentados-em-gráficos-com-intervalos-de-confiança-e-tabelas-sumarizadas-destacando-a-eficácia-do-tratamento-em-suprimir-a-germinação." class="level3">
+<h3 class="anchored" data-anchor-id="a-germinação-de-uredósporos-gu-é-um-bioensaio-crítico-para-avaliar-a-sensibilidade-de-patógenos-a-tratamentos.-nesta-seção-modelamos-a-curva-dose-resposta-usando-um-modelo-log-logístico-calculamos-a-inibição-percentual-em-relação-ao-controle-e-determinamos-a-ec50-dose-para-50-de-inibição.-os-resultados-são-apresentados-em-gráficos-com-intervalos-de-confiança-e-tabelas-sumarizadas-destacando-a-eficácia-do-tratamento-em-suprimir-a-germinação.">A germinação de uredósporos (<em>GU</em>) é um bioensaio crítico para avaliar a sensibilidade de patógenos a tratamentos. Nesta seção, modelamos a curva dose-resposta usando um modelo log-logístico, calculamos a inibição percentual em relação ao controle e determinamos a EC50 (dose para 50% de inibição). Os resultados são apresentados em gráficos com intervalos de confiança e tabelas sumarizadas, destacando a eficácia do tratamento em suprimir a germinação.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>GU <span class="ot">&lt;-</span> <span class="fu">gsheet2tbl</span>(<span class="st">"https://docs.google.com/spreadsheets/d/1zEsVt_nnmydEUBJjkyMrOLHEu6pXeM-SmwTXyEoNbmg/edit?gid=0#gid=0"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>GU <span class="ot">&lt;-</span> GU <span class="sc">%&gt;%</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">REPETICAO =</span> <span class="fu">as.factor</span>(REPETICAO),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">DOSE =</span> <span class="fu">as.numeric</span>(DOSE)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(GU) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: center;" data-quarto-table-cell-role="th">DOSE</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">REPETICAO</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">UREDOSPORO</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">UREDOSPOROS_GERMINADOS</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">TAXA_DE_GERMINAÇÃO</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.0</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">146</td>
+<td style="text-align: center;">104</td>
+<td style="text-align: center;">71.23</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.0</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">205</td>
+<td style="text-align: center;">137</td>
+<td style="text-align: center;">66.82</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.0</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">67</td>
+<td style="text-align: center;">51</td>
+<td style="text-align: center;">76.11</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.0</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">241</td>
+<td style="text-align: center;">69.45</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2.5</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">252</td>
+<td style="text-align: center;">83</td>
+<td style="text-align: center;">32.93</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2.5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">193</td>
+<td style="text-align: center;">45</td>
+<td style="text-align: center;">23.31</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>controle <span class="ot">&lt;-</span> GU <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DOSE <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_controle =</span> <span class="fu">mean</span>(TAXA_DE_GERMINAÇÃO)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>()</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>GU2 <span class="ot">&lt;-</span> GU <span class="sc">%&gt;%</span> </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(DOSE) <span class="sc">%&gt;%</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_germ =</span> <span class="fu">mean</span>(TAXA_DE_GERMINAÇÃO),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_germ =</span> <span class="fu">sd</span>(TAXA_DE_GERMINAÇÃO),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">inib =</span> ((controle <span class="sc">-</span> mean_germ)<span class="sc">/</span>controle)<span class="sc">*</span><span class="dv">100</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">CI_lower =</span> mean_germ <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n<span class="dv">-1</span>) <span class="sc">*</span> sd_germ<span class="sc">/</span><span class="fu">sqrt</span>(n),</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">CI_upper =</span> mean_germ <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n<span class="dv">-1</span>) <span class="sc">*</span> sd_germ<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(GU2) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: center;" data-quarto-table-cell-role="th">DOSE</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">mean_germ</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">sd_germ</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">inib</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">CI_lower</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">CI_upper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">70.90</td>
+<td style="text-align: center;">3.92</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">64.67</td>
+<td style="text-align: center;">77.13</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2.50</td>
+<td style="text-align: center;">26.93</td>
+<td style="text-align: center;">4.95</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">62.01</td>
+<td style="text-align: center;">19.06</td>
+<td style="text-align: center;">34.81</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3.75</td>
+<td style="text-align: center;">9.69</td>
+<td style="text-align: center;">4.44</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">86.34</td>
+<td style="text-align: center;">2.62</td>
+<td style="text-align: center;">16.76</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5.00</td>
+<td style="text-align: center;">6.08</td>
+<td style="text-align: center;">0.29</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">91.42</td>
+<td style="text-align: center;">5.62</td>
+<td style="text-align: center;">6.54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7.50</td>
+<td style="text-align: center;">4.24</td>
+<td style="text-align: center;">1.07</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">94.02</td>
+<td style="text-align: center;">2.54</td>
+<td style="text-align: center;">5.95</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10.00</td>
+<td style="text-align: center;">3.64</td>
+<td style="text-align: center;">1.58</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">94.86</td>
+<td style="text-align: center;">1.13</td>
+<td style="text-align: center;">6.16</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+</section>
+<section id="modelagem-da-curva-dose-resposta" class="level2">
+<h2 class="anchored" data-anchor-id="modelagem-da-curva-dose-resposta">MODELAGEM DA CURVA DOSE-RESPOSTA</h2>
+<p>A modelagem da curva dose-resposta é essencial para quantificar a relação entre a concentração do tratamento e seu efeito na germinação de uredósporos. Nesta análise:</p>
+<p>Utilizamos um modelo não linear (<em>drm</em> com função <em>W1.4</em>) para estimar parâmetros como:</p>
+<ul>
+<li><p><strong>E&lt;sub&gt;max&lt;/sub&gt;</strong>: Máxima inibição observada.</p></li>
+<li><p><strong>EC50</strong>: Dose para 50% do efeito (com IC 95%).</p></li>
+<li><p><strong>Inclinação da curva</strong>: Sensibilidade do patógeno a variações de dose.<br>
+A validação do modelo incluiu análise de resíduos e teste de normalidade, garantindo robustez nas estimativas.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>EC <span class="ot">&lt;-</span> <span class="fu">drm</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  mean_germ <span class="sc">~</span> DOSE,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> GU2,</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fct =</span> <span class="fu">W1.4</span>()</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(EC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Model fitted: Weibull (type 1) (4 parms)
+
+Parameter estimates:
+
+               Estimate Std. Error t-value   p-value    
+b:(Intercept)  1.991112   0.189631 10.4999 0.0089489 ** 
+c:(Intercept)  4.237743   0.575215  7.3672 0.0179302 *  
+d:(Intercept) 70.910037   0.849463 83.4763 0.0001435 ***
+e:(Intercept)  2.402485   0.050044 48.0073 0.0004336 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error:
+
+ 0.8496181 (2 degrees of freedom)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">residuals</span>(EC) <span class="sc">~</span> <span class="fu">fitted</span>(EC), <span class="at">main =</span> <span class="st">"Resíduos vs Ajustados"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(EC), <span class="at">main =</span> <span class="st">"Q-Q Plot dos Resíduos"</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">residuals</span>(EC), <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index--1-_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>EC50_result <span class="ot">&lt;-</span> <span class="fu">ED</span>(EC, <span class="dv">50</span>, <span class="at">interval =</span> <span class="st">"delta"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Estimated effective doses
+
+       Estimate Std. Error   Lower   Upper
+e:1:50  1.99856    0.06471 1.72014 2.27699</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste</span>(<span class="st">"EC50 ="</span>, <span class="fu">round</span>(EC50_result[<span class="dv">1</span>], <span class="dv">2</span>),</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">"("</span>, <span class="fu">round</span>(EC50_result[<span class="dv">3</span>], <span class="dv">2</span>), <span class="st">"-"</span>, <span class="fu">round</span>(EC50_result[<span class="dv">4</span>], <span class="dv">2</span>), <span class="st">")"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>EC50 = 2 ( 1.72 - 2.28 )</code></pre>
+</div>
+</div>
+</section>
+<section id="visualização-da-curva-dose-resposta" class="level2">
+<h2 class="anchored" data-anchor-id="visualização-da-curva-dose-resposta">VISUALIZAÇÃO DA CURVA DOSE-RESPOSTA</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>plot_curva <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> GU2, <span class="fu">aes</span>(<span class="at">x =</span> DOSE)) <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> mean_germ), <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> CI_lower, <span class="at">ymax =</span> CI_upper), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">fitted</span>(EC)), <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">50</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="fu">max</span>(GU2<span class="sc">$</span>DOSE), </span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="dv">55</span>,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"EC50 = "</span>, <span class="fu">round</span>(EC50_result[<span class="dv">1</span>], <span class="dv">2</span>), </span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                          <span class="st">" ("</span>, <span class="fu">round</span>(EC50_result[<span class="dv">3</span>], <span class="dv">2</span>), <span class="st">"-"</span>, </span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">round</span>(EC50_result[<span class="dv">4</span>], <span class="dv">2</span>), <span class="st">")"</span>), </span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">hjust =</span> <span class="dv">1</span>, </span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">expression</span>(<span class="st">"Dose (ml L"</span><span class="sc">^-</span><span class="dv">1</span><span class="sc">~</span><span class="st">")"</span>), </span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Germinação média (%)"</span>,</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Curva Dose-Resposta"</span>) <span class="sc">+</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot_curva)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index--1-_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cálculo-da-área-abaixo-da-curva-aacpd" class="level2">
+<h2 class="anchored" data-anchor-id="cálculo-da-área-abaixo-da-curva-aacpd">CÁLCULO DA ÁREA ABAIXO DA CURVA (AACPD)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>PTD <span class="ot">&lt;-</span> <span class="fu">gsheet2tbl</span>(<span class="st">"https://docs.google.com/spreadsheets/d/1zEsVt_nnmydEUBJjkyMrOLHEu6pXeM-SmwTXyEoNbmg/edit?gid=1680501439#gid=1680501439"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>PTD <span class="ot">&lt;-</span> PTD <span class="sc">%&gt;%</span> </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">SEVERIDADE =</span> <span class="fu">as.numeric</span>(<span class="fu">str_replace</span>(SEVERIDADE, <span class="st">","</span>, <span class="st">"."</span>)) <span class="sc">/</span> <span class="dv">100</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    REPETIÇÃO <span class="ot">=</span> <span class="fu">as.factor</span>(REPETIÇÃO),</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">BLOCO =</span> <span class="fu">as.factor</span>(BLOCO),</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">TRATAMENTO =</span> <span class="fu">as.factor</span>(TRATAMENTO)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>niveis_tratamento <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Control"</span>, <span class="st">"3 x F"</span>, <span class="st">"3 x IRStimulus"</span>,</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"F, IRStimulus, IRStimulus"</span>, </span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"IRStimulus, F, IRStimulus"</span>, </span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"IRStimulus+F, F,F"</span>)</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(PTD<span class="sc">$</span>TRATAMENTO) <span class="ot">&lt;-</span> niveis_tratamento</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>PTD_2 <span class="ot">&lt;-</span> PTD <span class="sc">%&gt;%</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(REPETIÇÃO, TRATAMENTO, DAE) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">sev_mean =</span> <span class="fu">mean</span>(SEVERIDADE),</span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">sev_sd =</span> <span class="fu">sd</span>(SEVERIDADE),</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">sev_CI_lower =</span> sev_mean <span class="sc">-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n<span class="dv">-1</span>) <span class="sc">*</span> sev_sd<span class="sc">/</span><span class="fu">sqrt</span>(n),</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">sev_CI_upper =</span> sev_mean <span class="sc">+</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n<span class="dv">-1</span>) <span class="sc">*</span> sev_sd<span class="sc">/</span><span class="fu">sqrt</span>(n)</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'REPETIÇÃO', 'TRATAMENTO'. You can override
+using the `.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(PTD_2) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: center;" data-quarto-table-cell-role="th">REPETIÇÃO</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">TRATAMENTO</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">DAE</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">sev_mean</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">sev_sd</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">n</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">sev_CI_lower</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">sev_CI_upper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">36</td>
+<td style="text-align: center;">0.001000</td>
+<td style="text-align: center;">0.0000000</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.0010000</td>
+<td style="text-align: center;">0.0010000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">43</td>
+<td style="text-align: center;">0.007125</td>
+<td style="text-align: center;">0.0025617</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.0030487</td>
+<td style="text-align: center;">0.0112013</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">50</td>
+<td style="text-align: center;">0.016500</td>
+<td style="text-align: center;">0.0048990</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.0087046</td>
+<td style="text-align: center;">0.0242954</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">57</td>
+<td style="text-align: center;">0.025875</td>
+<td style="text-align: center;">0.0046256</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.0185147</td>
+<td style="text-align: center;">0.0332353</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">63</td>
+<td style="text-align: center;">0.034375</td>
+<td style="text-align: center;">0.0065749</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.0239129</td>
+<td style="text-align: center;">0.0448371</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">70</td>
+<td style="text-align: center;">0.193750</td>
+<td style="text-align: center;">0.0379418</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0.1333761</td>
+<td style="text-align: center;">0.2541239</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="verificação-da-interação-entre-experimentos" class="level2">
+<h2 class="anchored" data-anchor-id="verificação-da-interação-entre-experimentos">VERIFICAÇÃO DA INTERAÇÃO ENTRE EXPERIMENTOS</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>PTD_3 <span class="ot">&lt;-</span> PTD <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(REPETIÇÃO, TRATAMENTO, BLOCO) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">audpc =</span> <span class="fu">AUDPC</span>(DAE, SEVERIDADE),</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">'drop'</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    REPETIÇÃO <span class="ot">=</span> <span class="fu">as.factor</span>(REPETIÇÃO),</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">TRATAMENTO =</span> <span class="fu">as.factor</span>(TRATAMENTO),</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">BLOCO =</span> <span class="fu">as.factor</span>(BLOCO)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(PTD_3) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: center;" data-quarto-table-cell-role="th">REPETIÇÃO</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">TRATAMENTO</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">BLOCO</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">audpc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">12.6970</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">14.1700</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">12.6475</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">13.7575</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">3 x F</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">4.0025</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">3 x F</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">3.6260</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="interação" class="level2">
+<h2 class="anchored" data-anchor-id="interação">Interação</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>modelo_interacao <span class="ot">&lt;-</span> <span class="fu">lm</span>(audpc <span class="sc">~</span> TRATAMENTO <span class="sc">*</span> REPETIÇÃO <span class="sc">+</span> BLOCO,</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> PTD_3)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>anova_interacao <span class="ot">&lt;-</span> <span class="fu">anova</span>(modelo_interacao)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(anova_interacao) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Df</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sum Sq</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Mean Sq</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">F value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">TRATAMENTO</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">514.23090</td>
+<td style="text-align: right;">102.8461808</td>
+<td style="text-align: right;">235.120043</td>
+<td style="text-align: right;">0.00e+00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">REPETIÇÃO</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">28.11184</td>
+<td style="text-align: right;">28.1118414</td>
+<td style="text-align: right;">64.267407</td>
+<td style="text-align: right;">0.00e+00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BLOCO</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">14.81787</td>
+<td style="text-align: right;">4.9392901</td>
+<td style="text-align: right;">11.291874</td>
+<td style="text-align: right;">2.97e-05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TRATAMENTO:REPETIÇÃO</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">18.65931</td>
+<td style="text-align: right;">3.7318624</td>
+<td style="text-align: right;">8.531534</td>
+<td style="text-align: right;">2.88e-05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Residuals</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">14.43486</td>
+<td style="text-align: right;">0.4374199</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (anova_interacao[<span class="st">"TRATAMENTO:REPETIÇÃO"</span>, <span class="st">"Pr(&gt;F)"</span>] <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Interação significativa encontrada. Analisando experimentos separadamente."</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"Nenhuma interação significativa. Pode-se analisar os dados combinados."</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Interação significativa encontrada. Analisando experimentos separadamente.</code></pre>
+</div>
+</div>
+</section>
+<section id="análise-individual-para-cada-experimento" class="level2">
+<h2 class="anchored" data-anchor-id="análise-individual-para-cada-experimento">ANÁLISE INDIVIDUAL PARA CADA EXPERIMENTO</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>analisar_experimento <span class="ot">&lt;-</span> <span class="cf">function</span>(dados_experimento, exp_id) {</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Análise para o Experimento"</span>, exp_id, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(audpc <span class="sc">~</span> TRATAMENTO <span class="sc">+</span> BLOCO,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> dados_experimento)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Verificação de pressupostos:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  teste_normalidade <span class="ot">&lt;-</span> <span class="fu">check_normality</span>(modelo)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(teste_normalidade)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>  p_heteroced <span class="ot">&lt;-</span> <span class="fu">check_heteroscedasticity</span>(modelo)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Teste de heterocedasticidade - p-value:"</span>, p_heteroced, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="fu">residuals</span>(modelo) <span class="sc">~</span> <span class="fu">fitted</span>(modelo), <span class="at">main =</span> <span class="st">"Resíduos vs Ajustados"</span>)</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqnorm</span>(<span class="fu">residuals</span>(modelo), <span class="at">main =</span> <span class="st">"Q-Q Plot dos Resíduos"</span>)</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">qqline</span>(<span class="fu">residuals</span>(modelo), <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (p_heteroced <span class="sc">&lt;</span> <span class="fl">0.05</span>) {</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"Heterocedasticidade detectada (p = "</span>, <span class="fu">round</span>(p_heteroced, <span class="dv">3</span>), <span class="st">"). Aplicando transformação logarítmica."</span>)</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>    modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(audpc) <span class="sc">~</span> TRATAMENTO <span class="sc">+</span> BLOCO,</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> dados_experimento)</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Verificação após transformação:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">check_normality</span>(modelo))</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>    p_heteroced_pos <span class="ot">&lt;-</span> <span class="fu">check_heteroscedasticity</span>(modelo)</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"Teste de heterocedasticidade após transformação - p-value:"</span>, p_heteroced_pos, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Tabela ANOVA:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>  anova_result <span class="ot">&lt;-</span> <span class="fu">anova</span>(modelo)</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(anova_result)</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>  medias <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(modelo, <span class="sc">~</span> TRATAMENTO, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a>  cld_result <span class="ot">&lt;-</span> <span class="fu">cld</span>(medias,</span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>                    <span class="at">Letters =</span> letters,</span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>                    <span class="at">adjust =</span> <span class="st">"tukey"</span>)</span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>  cv <span class="ot">&lt;-</span> agricolae<span class="sc">::</span><span class="fu">cv.model</span>(modelo) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">modelo =</span> modelo,</span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">anova =</span> anova_result,</span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">medias =</span> medias,</span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">cld =</span> cld_result,</span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">cv =</span> cv</span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>resultados_exp1 <span class="ot">&lt;-</span> <span class="fu">analisar_experimento</span>(<span class="fu">filter</span>(PTD_3, REPETIÇÃO <span class="sc">==</span> <span class="dv">1</span>), <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Análise para o Experimento 1 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Verificação de pressupostos:
+OK: residuals appear as normally distributed (p = 0.290).
+Teste de heterocedasticidade - p-value: 0.01269094 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index--1-_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Heterocedasticidade detectada (p = 0.013). Aplicando transformação logarítmica.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Verificação após transformação:
+OK: residuals appear as normally distributed (p = 0.083).
+Teste de heterocedasticidade após transformação - p-value: 0.587577 
+
+Tabela ANOVA:
+Analysis of Variance Table
+
+Response: log(audpc)
+           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+TRATAMENTO  5 6.5872 1.31745 52.3843 5.755e-09 ***
+BLOCO       3 0.3937 0.13124  5.2185   0.01147 *  
+Residuals  15 0.3772 0.02515                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Note: adjust = "tukey" was changed to "sidak"
+because "tukey" is only appropriate for one set of pairwise comparisons</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>resultados_exp2 <span class="ot">&lt;-</span> <span class="fu">analisar_experimento</span>(<span class="fu">filter</span>(PTD_3, REPETIÇÃO <span class="sc">==</span> <span class="dv">2</span>), <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Análise para o Experimento 2 </code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Verificação de pressupostos:
+OK: residuals appear as normally distributed (p = 0.573).
+Teste de heterocedasticidade - p-value: 0.1901227 </code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index--1-_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Tabela ANOVA:
+Analysis of Variance Table
+
+Response: audpc
+           Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+TRATAMENTO  5 212.505  42.501  453.72 8.244e-16 ***
+BLOCO       3   6.447   2.149   22.94 7.396e-06 ***
+Residuals  15   1.405   0.094                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Note: adjust = "tukey" was changed to "sidak"
+because "tukey" is only appropriate for one set of pairwise comparisons</code></pre>
+</div>
+</div>
+</section>
+<section id="tabela-resumo-dos-resultados" class="level2">
+<h2 class="anchored" data-anchor-id="tabela-resumo-dos-resultados">TABELA RESUMO DOS RESULTADOS</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>extrair_dados_cld <span class="ot">&lt;-</span> <span class="cf">function</span>(cld_obj) {</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(cld_obj)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  tratamento <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="st">"TRATAMENTO"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.character</span>(df<span class="sc">$</span>TRATAMENTO)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="st">"treatment"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.character</span>(df<span class="sc">$</span>treatment)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="st">"trt"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.character</span>(df<span class="sc">$</span>trt)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.character</span>(<span class="fu">rownames</span>(df))</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  response <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="st">"response"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>response</span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="st">"emmean"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>emmean</span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="st">"prob"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>prob</span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="fu">nrow</span>(df))</span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>  group <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="st">".group"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>.group</span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (<span class="st">"group"</span> <span class="sc">%in%</span> <span class="fu">names</span>(df)) {</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>    df<span class="sc">$</span>group</span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rep</span>(<span class="st">""</span>, <span class="fu">nrow</span>(df))</span>
+<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb48-31"><a href="#cb48-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-32"><a href="#cb48-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb48-33"><a href="#cb48-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">TRATAMENTO =</span> tratamento,</span>
+<span id="cb48-34"><a href="#cb48-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">response =</span> <span class="fu">as.numeric</span>(response),</span>
+<span id="cb48-35"><a href="#cb48-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">.group =</span> <span class="fu">as.character</span>(group),</span>
+<span id="cb48-36"><a href="#cb48-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb48-37"><a href="#cb48-37" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb48-38"><a href="#cb48-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-39"><a href="#cb48-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-40"><a href="#cb48-40" aria-hidden="true" tabindex="-1"></a>criar_tabela_final <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb48-41"><a href="#cb48-41" aria-hidden="true" tabindex="-1"></a>  dados_exp1 <span class="ot">&lt;-</span> <span class="fu">extrair_dados_cld</span>(resultados_exp1<span class="sc">$</span>cld) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-42"><a href="#cb48-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Experimento =</span> <span class="st">"1"</span>,</span>
+<span id="cb48-43"><a href="#cb48-43" aria-hidden="true" tabindex="-1"></a>           <span class="at">response =</span> <span class="fu">round</span>(response, <span class="dv">2</span>))</span>
+<span id="cb48-44"><a href="#cb48-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-45"><a href="#cb48-45" aria-hidden="true" tabindex="-1"></a>  dados_exp2 <span class="ot">&lt;-</span> <span class="fu">extrair_dados_cld</span>(resultados_exp2<span class="sc">$</span>cld) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-46"><a href="#cb48-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Experimento =</span> <span class="st">"2"</span>,</span>
+<span id="cb48-47"><a href="#cb48-47" aria-hidden="true" tabindex="-1"></a>           <span class="at">response =</span> <span class="fu">round</span>(response, <span class="dv">2</span>))</span>
+<span id="cb48-48"><a href="#cb48-48" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-49"><a href="#cb48-49" aria-hidden="true" tabindex="-1"></a>  tabela <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(dados_exp1, dados_exp2) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-50"><a href="#cb48-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(</span>
+<span id="cb48-51"><a href="#cb48-51" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_from =</span> Experimento,</span>
+<span id="cb48-52"><a href="#cb48-52" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_from =</span> <span class="fu">c</span>(response, .group),</span>
+<span id="cb48-53"><a href="#cb48-53" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_glue =</span> <span class="st">"Exp_{Experimento}_{.value}"</span></span>
+<span id="cb48-54"><a href="#cb48-54" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb48-55"><a href="#cb48-55" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-56"><a href="#cb48-56" aria-hidden="true" tabindex="-1"></a>  linha_cv <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb48-57"><a href="#cb48-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">TRATAMENTO =</span> <span class="st">"CV (%)"</span>,</span>
+<span id="cb48-58"><a href="#cb48-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">Exp_1_response =</span> resultados_exp1<span class="sc">$</span>cv,</span>
+<span id="cb48-59"><a href="#cb48-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">Exp_2_response =</span> resultados_exp2<span class="sc">$</span>cv,</span>
+<span id="cb48-60"><a href="#cb48-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">Exp_1_.group =</span> <span class="st">""</span>,</span>
+<span id="cb48-61"><a href="#cb48-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">Exp_2_.group =</span> <span class="st">""</span>,</span>
+<span id="cb48-62"><a href="#cb48-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb48-63"><a href="#cb48-63" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb48-64"><a href="#cb48-64" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-65"><a href="#cb48-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(linha_cv) <span class="ot">&lt;-</span> <span class="fu">names</span>(tabela)</span>
+<span id="cb48-66"><a href="#cb48-66" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-67"><a href="#cb48-67" aria-hidden="true" tabindex="-1"></a>  tabela_final <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(tabela, linha_cv)</span>
+<span id="cb48-68"><a href="#cb48-68" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-69"><a href="#cb48-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(tabela_final) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Tratamento"</span>, </span>
+<span id="cb48-70"><a href="#cb48-70" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"AACPD Exp 1"</span>, <span class="st">"Grupo Exp 1"</span>, </span>
+<span id="cb48-71"><a href="#cb48-71" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"AACPD Exp 2"</span>, <span class="st">"Grupo Exp 2"</span>)</span>
+<span id="cb48-72"><a href="#cb48-72" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb48-73"><a href="#cb48-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(tabela_final)</span>
+<span id="cb48-74"><a href="#cb48-74" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-75"><a href="#cb48-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-76"><a href="#cb48-76" aria-hidden="true" tabindex="-1"></a>tabela_final <span class="ot">&lt;-</span> <span class="fu">criar_tabela_final</span>()</span>
+<span id="cb48-77"><a href="#cb48-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-78"><a href="#cb48-78" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(tabela_final, <span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-79"><a href="#cb48-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-80"><a href="#cb48-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"Experimento 1"</span> <span class="ot">=</span> <span class="dv">2</span>, <span class="st">"Experimento 2"</span> <span class="ot">=</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-81"><a href="#cb48-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_spec</span>(<span class="fu">nrow</span>(tabela_final), <span class="at">bold =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-82"><a href="#cb48-82" aria-hidden="true" tabindex="-1"></a>  <span class="fu">footnote</span>(<span class="at">general =</span> <span class="st">"Médias seguidas pela mesma letra não diferem entre si pelo teste de Tukey (p &lt; 0.05)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Experimento 1
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Experimento 2
+</div></th>
+</tr>
+<tr class="odd">
+<th style="text-align: center;" data-quarto-table-cell-role="th">Tratamento</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">AACPD Exp 1</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Grupo Exp 1</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">AACPD Exp 2</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Grupo Exp 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">IRStimulus+F, F,F</td>
+<td style="text-align: center;">3.12</td>
+<td style="text-align: center;">1.74</td>
+<td style="text-align: center;">a</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3 x F</td>
+<td style="text-align: center;">3.44</td>
+<td style="text-align: center;">2.11</td>
+<td style="text-align: center;">a</td>
+<td style="text-align: center;">ab</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">IRStimulus, F, IRStimulus</td>
+<td style="text-align: center;">3.67</td>
+<td style="text-align: center;">2.88</td>
+<td style="text-align: center;">a</td>
+<td style="text-align: center;">c</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">F, IRStimulus, IRStimulus</td>
+<td style="text-align: center;">3.97</td>
+<td style="text-align: center;">2.60</td>
+<td style="text-align: center;">a</td>
+<td style="text-align: center;">bc</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3 x IRStimulus</td>
+<td style="text-align: center;">7.63</td>
+<td style="text-align: center;">7.84</td>
+<td style="text-align: center;">b</td>
+<td style="text-align: center;">d</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">Control</td>
+<td style="text-align: center;">13.30</td>
+<td style="text-align: center;">9.24</td>
+<td style="text-align: center;">c</td>
+<td style="text-align: center;">e</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center; font-weight: bold;">CV (%)</td>
+<td style="text-align: center; font-weight: bold;">9.84</td>
+<td style="text-align: center; font-weight: bold;">6.95</td>
+<td style="text-align: center; font-weight: bold;"></td>
+<td style="text-align: center; font-weight: bold;"></td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: center; padding: 0;"><span style="font-style: italic;">Note: </span></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center; padding: 0;"><sup></sup> Médias seguidas pela mesma letra não diferem entre si pelo teste de Tukey (p &lt; 0.05)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tfoot>
+
+</table>
+
+
+</div>
+</div>
+</section>
+<section id="visualização-gráfica-dos-resultados" class="level2">
+<h2 class="anchored" data-anchor-id="visualização-gráfica-dos-resultados">VISUALIZAÇÃO GRÁFICA DOS RESULTADOS</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(PTD_3, <span class="fu">aes</span>(<span class="at">x =</span> TRATAMENTO, <span class="at">y =</span> audpc, <span class="at">fill =</span> REPETIÇÃO)) <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">18</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.75</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Tratamentos"</span>,</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Área Abaixo da Curva de Progresso da Doença (AACPD)"</span>,</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Experimento"</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"top"</span></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#1f78b4"</span>, <span class="st">"#33a02c"</span>),</span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Experimento 1"</span>, <span class="st">"Experimento 2"</span>)</span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index--1-_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(PTD_2, <span class="fu">aes</span>(<span class="at">x =</span> DAE, <span class="at">y =</span> sev_mean, <span class="at">color =</span> TRATAMENTO)) <span class="sc">+</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> sev_CI_lower, <span class="at">ymax =</span> sev_CI_upper),</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.5</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>REPETIÇÃO, </span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> <span class="fu">labeller</span>(</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>               REPETIÇÃO <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"1"</span> <span class="ot">=</span> <span class="st">"Experimento 1"</span>, <span class="st">"2"</span> <span class="ot">=</span> <span class="st">"Experimento 2"</span>)</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>             )) <span class="sc">+</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Dias Após a Inoculação (DAI)"</span>,</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Severidade da Doença (Proporção)"</span>,</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Tratamento"</span></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="dv">12</span>)</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index--1-_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
