@@ -1,13 +1,60 @@
 ---
-title: "Projeto soja"
-format: 
+project:
+  type: website
+  output-dir: docs
+   
+execute:
+  cache: true
+  freeze: auto
+  warning: false
+
+website:
+  title: "Projeto Final"
+  favicon: logo3.png
+  
+  navbar:
+    pinned: true
+    logo: logo2.gif
+    
+    left:
+      - href: resumo.qmd
+        text: Sobre o projeto
+      - text: Análise dos Dados
+        menu: 
+          - href: dados.qmd
+            text: Análise Contagem de Galhas (Escala de Notas)
+          - href: dados2.qmd
+            text: Análise Fator de Reprodução
+      
+    right:
+       - icon: linkedin
+         href: https://br.linkedin.com/in/dy%C3%AAnici-rodrigues-30ba6a241
+       - icon: instagram
+         menu: 
+            - text: Dyênici Rodrigues
+              url: https://www.instagram.com/dyenici/
+            - text: Emerson M. Del Ponte
+              url: https://www.instagram.com/emdelponte/
+            - text: Fitopatolofia UFV
+              url: https://www.instagram.com/fitopatologiaufv/
+       - icon: youtube
+         href: https://www.youtube.com/edelponte
+       - icon: github
+         menu:
+            - text: Dyênici Rodrigues
+              url: https://github.com/dyenici
+            - text: Emerson M. Del Ponte
+              url: https://github.com/emdelponte
+
+format:
   html:
-    theme: 
-      light: sandstone
-      dark: cyborg
+    theme:
+      light: flatly
+      dark: darkly
     css: styles.css
     toc: true
-    editor: visual
+
+editor: visual
 ---
 
 # CARREGAMENTO DE PACOTES
