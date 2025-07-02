@@ -1,0 +1,400 @@
+---
+title: "Projeto soja"
+format: 
+  html:
+    theme: 
+      light: sandstone
+      dark: cyborg
+    css: styles.css
+    toc: true
+    editor: visual
+---
+
+# CARREGAMENTO DE PACOTES
+
+```{r}
+
+library(tidyverse)
+library(drc)
+library(gsheet)
+library(kableExtra)
+library(DT)
+library(leaflet)
+library(patchwork)
+library(performance)
+library(emmeans)
+library(DHARMa)
+library(multcomp)
+library(epifitter)
+library(lme4)
+library(agricolae)
+library(qqplotr)
+```
+
+## LOCALIZAÇÃO DOS EXPERIMENTOS
+
+```{r}
+leaflet() %>%
+  addTiles() %>% 
+  setView(lng = -42.8497, lat = -20.7453, zoom = 16) %>% 
+  addMarkers(lng = -42.8497, lat = -20.7453, 
+             popup = "Localização do experimento")
+```
+
+## ANÁLISE DE GERMINAÇÃO DE UREDÓSPOROS (GU)
+
+```{r}
+GU <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1zEsVt_nnmydEUBJjkyMrOLHEu6pXeM-SmwTXyEoNbmg/edit?gid=0#gid=0")
+
+GU <- GU %>% 
+  mutate(
+    REPETICAO = as.factor(REPETICAO),
+    DOSE = as.numeric(DOSE)
+  )
+
+head(GU) %>% 
+  kable(align = "c") %>% 
+  kable_styling(full_width = FALSE)
+
+controle <- GU %>% 
+  filter(DOSE == 0) %>% 
+  summarise(mean_controle = mean(TAXA_DE_GERMINAÇÃO)) %>% 
+  pull()
+
+GU2 <- GU %>% 
+  group_by(DOSE) %>%
+  summarise(
+    mean_germ = mean(TAXA_DE_GERMINAÇÃO),
+    sd_germ = sd(TAXA_DE_GERMINAÇÃO),
+    n = n()
+  ) %>% 
+  mutate(
+    inib = ((controle - mean_germ)/controle)*100,
+    CI_lower = mean_germ - qt(0.975, df = n-1) * sd_germ/sqrt(n),
+    CI_upper = mean_germ + qt(0.975, df = n-1) * sd_germ/sqrt(n)
+  ) %>% 
+  round(digits = 2)
+
+head(GU2) %>% 
+  kable(align = "c") %>% 
+  kable_styling(full_width = FALSE)
+```
+
+## MODELAGEM DA CURVA DOSE-RESPOSTA
+
+```{r}
+EC <- drm(
+  mean_germ ~ DOSE,
+  data = GU2,
+  fct = W1.4()
+)
+
+summary(EC)
+
+par(mfrow = c(1, 2))
+plot(residuals(EC) ~ fitted(EC), main = "Resíduos vs Ajustados")
+abline(h = 0, col = "red")
+qqnorm(residuals(EC), main = "Q-Q Plot dos Resíduos")
+qqline(residuals(EC), col = "red")
+
+EC50_result <- ED(EC, 50, interval = "delta")
+cat(paste("EC50 =", round(EC50_result[1], 2),
+          "(", round(EC50_result[3], 2), "-", round(EC50_result[4], 2), ")"))
+```
+
+## VISUALIZAÇÃO DA CURVA DOSE-RESPOSTA
+
+```{r}
+plot_curva <- ggplot(data = GU2, aes(x = DOSE)) +
+  geom_point(aes(y = mean_germ), size = 3) +
+  geom_errorbar(aes(ymin = CI_lower, ymax = CI_upper), width = 0.2) +
+  geom_line(aes(y = fitted(EC)), color = "blue") +
+  geom_hline(yintercept = 50, linetype = "dashed", color = "red") +
+  annotate("text", 
+           x = max(GU2$DOSE), 
+           y = 55,
+           label = paste0("EC50 = ", round(EC50_result[1], 2), 
+                          " (", round(EC50_result[3], 2), "-", 
+                          round(EC50_result[4], 2), ")"), 
+           hjust = 1, 
+           color = "red") +
+  labs(x = expression("Dose (ml L"^-1~")"), 
+       y = "Germinação média (%)",
+       title = "Curva Dose-Resposta") +
+  theme_minimal()
+
+print(plot_curva)
+
+```
+
+## CÁLCULO DA ÁREA ABAIXO DA CURVA (AACPD)
+
+```{r}
+PTD <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1zEsVt_nnmydEUBJjkyMrOLHEu6pXeM-SmwTXyEoNbmg/edit?gid=1680501439#gid=1680501439")
+
+PTD <- PTD %>% 
+  mutate(
+    SEVERIDADE = as.numeric(str_replace(SEVERIDADE, ",", ".")) / 100,
+    REPETIÇÃO = as.factor(REPETIÇÃO),
+    BLOCO = as.factor(BLOCO),
+    TRATAMENTO = as.factor(TRATAMENTO)
+  )
+
+niveis_tratamento <- c("Control", "3 x F", "3 x IRStimulus",
+                       "F, IRStimulus, IRStimulus", 
+                       "IRStimulus, F, IRStimulus", 
+                       "IRStimulus+F, F,F")
+
+levels(PTD$TRATAMENTO) <- niveis_tratamento
+
+PTD_2 <- PTD %>%
+  group_by(REPETIÇÃO, TRATAMENTO, DAE) %>% 
+  summarise(
+    sev_mean = mean(SEVERIDADE),
+    sev_sd = sd(SEVERIDADE),
+    n = n()
+  ) %>%
+  mutate(
+    sev_CI_lower = sev_mean - qt(0.975, df = n-1) * sev_sd/sqrt(n),
+    sev_CI_upper = sev_mean + qt(0.975, df = n-1) * sev_sd/sqrt(n)
+  )
+
+head(PTD_2) %>% 
+  kable(align = "c") %>% 
+  kable_styling(full_width = FALSE)
+```
+
+## VERIFICAÇÃO DA INTERAÇÃO ENTRE EXPERIMENTOS
+
+```{r}
+PTD_3 <- PTD %>%
+  group_by(REPETIÇÃO, TRATAMENTO, BLOCO) %>% 
+  summarise(
+    audpc = AUDPC(DAE, SEVERIDADE),
+    .groups = 'drop'
+  ) %>% 
+  mutate(
+    REPETIÇÃO = as.factor(REPETIÇÃO),
+    TRATAMENTO = as.factor(TRATAMENTO),
+    BLOCO = as.factor(BLOCO)
+  )
+
+head(PTD_3) %>% 
+  kable(align = "c") %>% 
+  kable_styling(full_width = FALSE)
+```
+
+## VERIFICAÇÃO DA INTERAÇÃO ENTRE EXPERIMENTOS\]
+
+```{r}
+modelo_interacao <- lm(audpc ~ TRATAMENTO * REPETIÇÃO + BLOCO,
+                       data = PTD_3)
+
+anova_interacao <- anova(modelo_interacao)
+kable(anova_interacao) %>% 
+  kable_styling(full_width = FALSE)
+
+if (anova_interacao["TRATAMENTO:REPETIÇÃO", "Pr(>F)"] < 0.05) {
+  message("Interação significativa encontrada. Analisando experimentos separadamente.")
+} else {
+  message("Nenhuma interação significativa. Pode-se analisar os dados combinados.")
+}
+```
+
+## ANÁLISE INDIVIDUAL PARA CADA EXPERIMENTO
+
+```{r}
+analisar_experimento <- function(dados_experimento, exp_id) {
+  
+  message(paste("\nAnálise para o Experimento", exp_id, "\n"))
+  
+  modelo <- lm(audpc ~ TRATAMENTO + BLOCO,
+               data = dados_experimento)
+  
+  cat("\nVerificação de pressupostos:\n")
+  teste_normalidade <- check_normality(modelo)
+  print(teste_normalidade)
+  
+  p_heteroced <- check_heteroscedasticity(modelo)
+  cat("Teste de heterocedasticidade - p-value:", p_heteroced, "\n")
+  
+  par(mfrow = c(1, 2))
+  plot(residuals(modelo) ~ fitted(modelo), main = "Resíduos vs Ajustados")
+  abline(h = 0, col = "red")
+  qqnorm(residuals(modelo), main = "Q-Q Plot dos Resíduos")
+  qqline(residuals(modelo), col = "red")
+  par(mfrow = c(1, 1))
+  
+  if (p_heteroced < 0.05) {
+    message("Heterocedasticidade detectada (p = ", round(p_heteroced, 3), "). Aplicando transformação logarítmica.")
+    modelo <- lm(log(audpc) ~ TRATAMENTO + BLOCO,
+                 data = dados_experimento)
+    
+    cat("\nVerificação após transformação:\n")
+    print(check_normality(modelo))
+    p_heteroced_pos <- check_heteroscedasticity(modelo)
+    cat("Teste de heterocedasticidade após transformação - p-value:", p_heteroced_pos, "\n")
+  }
+  
+  cat("\nTabela ANOVA:\n")
+  anova_result <- anova(modelo)
+  print(anova_result)
+  
+  medias <- emmeans(modelo, ~ TRATAMENTO, type = "response")
+  
+  cld_result <- cld(medias,
+                    Letters = letters,
+                    adjust = "tukey")
+  
+  cv <- agricolae::cv.model(modelo) %>% round(2)
+  
+  list(
+    modelo = modelo,
+    anova = anova_result,
+    medias = medias,
+    cld = cld_result,
+    cv = cv
+  )
+}
+
+resultados_exp1 <- analisar_experimento(filter(PTD_3, REPETIÇÃO == 1), 1)
+resultados_exp2 <- analisar_experimento(filter(PTD_3, REPETIÇÃO == 2), 2)
+
+```
+
+## TABELA RESUMO DOS RESULTADOS
+
+```{r}
+extrair_dados_cld <- function(cld_obj) {
+  df <- as.data.frame(cld_obj)
+  
+  tratamento <- if ("TRATAMENTO" %in% names(df)) {
+    as.character(df$TRATAMENTO)
+  } else if ("treatment" %in% names(df)) {
+    as.character(df$treatment)
+  } else if ("trt" %in% names(df)) {
+    as.character(df$trt)
+  } else {
+    as.character(rownames(df))
+  }
+  
+  response <- if ("response" %in% names(df)) {
+    df$response
+  } else if ("emmean" %in% names(df)) {
+    df$emmean
+  } else if ("prob" %in% names(df)) {
+    df$prob
+  } else {
+    rep(NA, nrow(df))
+  }
+  
+  group <- if (".group" %in% names(df)) {
+    df$.group
+  } else if ("group" %in% names(df)) {
+    df$group
+  } else {
+    rep("", nrow(df))
+  }
+  
+  data.frame(
+    TRATAMENTO = tratamento,
+    response = as.numeric(response),
+    .group = as.character(group),
+    stringsAsFactors = FALSE
+  )
+}
+
+criar_tabela_final <- function() {
+  dados_exp1 <- extrair_dados_cld(resultados_exp1$cld) %>% 
+    mutate(Experimento = "1",
+           response = round(response, 2))
+  
+  dados_exp2 <- extrair_dados_cld(resultados_exp2$cld) %>% 
+    mutate(Experimento = "2",
+           response = round(response, 2))
+  
+  tabela <- bind_rows(dados_exp1, dados_exp2) %>% 
+    pivot_wider(
+      names_from = Experimento,
+      values_from = c(response, .group),
+      names_glue = "Exp_{Experimento}_{.value}"
+    )
+  
+  linha_cv <- data.frame(
+    TRATAMENTO = "CV (%)",
+    Exp_1_response = resultados_exp1$cv,
+    Exp_2_response = resultados_exp2$cv,
+    Exp_1_.group = "",
+    Exp_2_.group = "",
+    stringsAsFactors = FALSE
+  )
+  
+  names(linha_cv) <- names(tabela)
+  
+  tabela_final <- bind_rows(tabela, linha_cv)
+  
+  colnames(tabela_final) <- c("Tratamento", 
+                              "AACPD Exp 1", "Grupo Exp 1", 
+                              "AACPD Exp 2", "Grupo Exp 2")
+  
+  return(tabela_final)
+}
+
+tabela_final <- criar_tabela_final()
+
+kable(tabela_final, align = "c") %>% 
+  kable_styling(full_width = FALSE) %>% 
+  add_header_above(c(" " = 1, "Experimento 1" = 2, "Experimento 2" = 2)) %>% 
+  row_spec(nrow(tabela_final), bold = TRUE) %>% 
+  footnote(general = "Médias seguidas pela mesma letra não diferem entre si pelo teste de Tukey (p < 0.05)")
+
+```
+
+## VISUALIZAÇÃO GRÁFICA DOS RESULTADOS
+
+```{r}
+ggplot(PTD_3, aes(x = TRATAMENTO, y = audpc, fill = REPETIÇÃO)) +
+  geom_boxplot(alpha = 0.7) +
+  stat_summary(
+    fun = mean, geom = "point", 
+    shape = 18, size = 3, color = "red",
+    position = position_dodge(width = 0.75)
+  ) +
+  labs(
+    x = "Tratamentos",
+    y = "Área Abaixo da Curva de Progresso da Doença (AACPD)",
+    fill = "Experimento"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top"
+  ) +
+  scale_fill_manual(
+    values = c("#1f78b4", "#33a02c"),
+    labels = c("Experimento 1", "Experimento 2")
+  )
+
+ggplot(PTD_2, aes(x = DAE, y = sev_mean, color = TRATAMENTO)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  geom_errorbar(
+    aes(ymin = sev_CI_lower, ymax = sev_CI_upper),
+    width = 0.5
+  ) +
+  facet_wrap(~REPETIÇÃO, 
+             labeller = labeller(
+               REPETIÇÃO = c("1" = "Experimento 1", "2" = "Experimento 2")
+             )) +
+  labs(
+    x = "Dias Após a Inoculação (DAI)",
+    y = "Severidade da Doença (Proporção)",
+    color = "Tratamento"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    strip.text = element_text(face = "bold", size = 12)
+  ) +
+  scale_color_brewer(palette = "Set1")
+```
